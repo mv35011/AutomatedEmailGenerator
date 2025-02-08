@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .email-container {
+            margin-top: 20px;
+            position: relative;
+        }
+        .email-content {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            line-height: 1.6;
+        }
+        .email-content strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #28a745;
+        }
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8d7da;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Email Generator</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="website_url">Website URL:</label>
+                <input type="url" id="website_url" name="website_url" required
+                       placeholder="Enter the website URL">
+            </div>
+            <button type="submit">Generate Email</button>
+        </form>
+
+        {% if error_message %}
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+        {% if generated_email %}
+        <div class="email-container">
+            <div class="email-content" id="emailContent">
+                {{ generated_email|safe }}
+            </div>
+            <button class="copy-button" data-clipboard-target="#emailContent">
+                Copy Email
+            </button>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Initialize clipboard.js
+        var clipboard = new ClipboardJS('.copy-button');
+
+        clipboard.on('success', function(e) {
+            alert('Email copied to clipboard!');
+            e.clearSelection();
+        });
+    </script>
+</body>
+</html>
